@@ -2,195 +2,118 @@
 
 ---
 
-### 类的申明和实现分开
+### ch1. 类的申明和实现分开
 
-classmain.cpp
+### ch2. 数组类的封装
 
-```cpp
-#include <iostream>
-using namespace std;
-#include "MyTeacher.h"
+目的：训练构造函数、赋值构造函数等，为操作符重载准备
 
-void main()
-{
-	MyTeacher t1;
-	t1.setAge(36);
-	cout << t1.getAge() << endl;
-	cout << "hello..." << endl;
-	system("pause");
-	return;
-}
+对数组进行赋值，并且可以取值，还能用数值给数值传值
 
-```
+步骤：
 
-MyTeacher.cpp
+1. 添加类.cpp 类.h，和主函数
 
-```
-#include "MyTeacher.h"
+2. 要知道.h文件里面所包含的属性，比如，有参构造函数，无参构造函数，析构函数等基础构造函数，再就是要明确自己需要定义的函数，比如取值，赋值等。还需要明确private中的参数。
 
-void MyTeacher::setAge(int age)
-{
-	m_age = age;
-}
-int MyTeacher::getAge()
-{
-	return m_age;
-}
-```
+   ```
+   public:
+   	Array();
+   	Array(const Array& obj);
+   	~Array();
 
-MyTeacher.h
+   public:
+   	void setData(int index, int data);
+   	int getData(int index);
+   	int length();
+   ```
 
-```
-#pragma once  //只包含一次
-/*
-#ifndef _MYTEACHER_   //ctrl + shift + u 转换大写
-#defin _MYTEACHER_
+3. 然后将.h文件里面定了的复制到.cpp文件里面，详细定义
 
-#endif
-*/
-class MyTeacher 
-{
-private:
-	int m_age;
-	char name[32];
+   ```
+   里面的参数不用给，但是结构基本设计出，即设计出类的框架
+   如果需要修改函数的结构，需要同步相关.h，.cpp文件
+   void Array::setData(int index, int data)
+   {
+   	
+   }
+   int Array::getData(int index)
+   {
+   	return 0;
+   }
+   int Array::length()
+   {
+   	return 0;
+   }
+   ```
 
-public:
-	void setAge(int age);
-	int getAge();
-};
+   然后运行，跑一把，看有没有错误
 
-```
+4. **然后再开始设计类的测试案例**，首先先想好自己的目标是什么，并且设计出测试程序：
 
-### 案例1，两个立方体的比较，使用类
+   ```
+       Array a1(10);
+   	cout << "打印数组a2" << endl;
+   	for (int i = 0; i < a.length(); i++)
+   	{
+   		 a.setData(i, i);
+   	}
+   	for (int i = 0; i < a.length(); i++)
+   	{
+   		cout << a.getData(i);
+   	}
 
-```cpp
-#include <iostream>
-using namespace std;
-class Cube
-{
-private:
-	int m_a;
-	int m_b;
-	int m_c;
-	int m_v;
-	int m_s;
-public:
-	void setA(int a)
-	{
-		m_a = a;
-	}
-	void setB(int b)
-	{
-		m_b = b;
-	}
-	void setC(int c)
-	{
-		m_c = c;
-	}
-	void setABC(int a = 0, int b = 0, int c = 0)
-	{
-		m_a = a; m_b = b;
-		m_c = c;
-	}
+   	Array a2 = a1;
+   	cout << "打印数组a2" << endl;
+   ```
 
- 
+   保证可以运行的情况下，并且开始完善里面的功能需求
 
-public:
-	int getV()
-	{
-		m_v = m_a * m_b*m_c;
-		return m_v;
-	}
-	int getS()
-	{
-		m_s = 2 * (m_a*m_b + m_a * m_c + m_b * m_c);
-		return m_s;
-	}
-	int getA()
-	{
-		return m_a;
-	}
-	int getB()
-	{
-		return m_b;
-	}
-	int getC()
-	{
-		return m_c;
-	}
-	//这里可以在参数里面定义比较函数，有两种，
-	//v1.judgecub(v1,v2),v1.judgecube(v2)
-	int judgecube(Cube &v1, Cube &v2)
-	{
-		if (
-			(v1.getA() == v2.getA()) &&
-			(v1.getB() == v2.getB()) &&
-			(v1.getC() == v2.getC())
-			)
-		{
-			return 1;
-		}
-		else
-		{
-			return 0;
-		}
-	}
+   首先需要增加的就是保存在类里面的参数，即private
 
-	int judgecube(Cube &v2)  //成员函数 重载函数
-	{
-		//一定要分清这个场景下的m_a是属于v1还是v2的
-		if (
-			(m_a == v2.getA()) &&
-			(m_b == v2.getB()) &&
-			(m_c == v2.getC())
-			)
-		{
-			return 1;
-		}
-		else
-		{
-			return 0;
-		}
-	}
+   然后对自己定义的函数进行功能设计，具体是干嘛的
 
-};
-//这里是使用全局函数来进行比较的，这个就没用到类的思想
-int judgeCube(Cube &v1, Cube &v2)
-{
-	if ((v1.getA() == v2.getA()) &&
-		(v1.getB() == v2.getB()) &&
-		(v1.getC() == v2.getC()) )
-		{
-			return 1;
-		}
-	else
-	{
-		return 0;
-	}
-}
+   ```
+   构造函数完成初始化，拷贝函数完成辅助，析构函数释放内存（如果有指针）
+   Array::Array(int length)
+   {
+   	if (length < 0)
+   	{
+   		m_len = 0;
+   	}
 
-void main()
-{
-	Cube v1, v2;
-	v1.setABC(1, 2, 3);
-	cout << v1.getS() << endl;
-	cout << v1.getV() << endl;
-	cout << "hello..." << endl;
+   	m_len = length;
+   	m_Space = new int[m_len]; //初始化
 
-	v2.setABC(1, 2, 4);
-	int targ = v1.judgecube(v2);
-	if (judgeCube(v1, v2) == 1)
-	{
-		cout << "相等" << endl;
-	}
-	else
-	{
-		cout << "不相等" << endl;
+   }
 
-	}
-	cout << targ << endl;
-	system("pause");
-	return;
-}
-```
+   Array::Array(const Array& obj)
+   {
+   	this->m_len = obj.m_len;
+   	this->m_Space = new int[this->m_len];  //分配内存
+
+   	for (int i = 0; i < obj.m_len; i++)
+   	{
+   		this->m_Space[i] = obj.m_Space[i];
+   	}
+   }
+   Array::~Array()
+   {
+   	if (m_Space != NULL)
+   	{
+   		delete [] m_Space;
+   		m_len = 0;
+   	}
+   }
+   ```
+
+5. 测试优化，看是不是自己想要的结果，否则进行改进
+
+
+
+
+
+## 小知识
+
+1. ​
 
