@@ -110,6 +110,63 @@
 5. 测试优化，看是不是自己想要的结果，否则进行改进
 
 
+### 实现一个字符串类 
+
+构造函数要求
+//C 语言中 没有字符串这种类型，是通过数组来模拟字符串
+//C++中 我们来设计一个字符串类 以零结尾的字符串
+//若 len 为 0,表示空串
+MyString a; //空串 “”
+MyString a(“dddd”);
+MyString b = a;
+b = “aaaaaa”
+b = a;
+if (a > b)
+if (a == b)
+b[i] = ‘a’;
+常用的操作符
+<< >> != == > < = 
+
+```cpp
+//C 语言中 没有字符串这种类型，是通过数组来模拟字符串
+//C++中 我们来设计一个字符串 以零结尾的字符串
+//这里我们先要明确所设计的类，目标是什么，构建出大致的构造函数框架（想要实现什么函数）
+
+class MyString
+{
+	friend ostream& operator<<(ostream &out, const MyString &s);
+public: //构造和析构
+	MyString(int len = 0);
+	MyString(const char *p);
+	MyString(const MyString& obj);
+	~MyString();
+public: //操作符重载
+	MyString& operator=(const char *p);
+	MyString& operator=(const MyString& obj);
+	char& operator[](int index) const;
+public:
+	bool operator==(const char* p) const;
+	bool operator!=(const char* p) const;
+	bool operator==(const MyString& s) const;
+	bool operator!=(const MyString& s) const;
+public: //string to c
+	char *c_str();
+	const char* c_str() const;
+	int length()
+	{
+		return m_len;
+	}
+public:
+	int operator<(const char *p);
+	int operator>(const char *p);
+	int operator<(const MyString &s);
+	int operator>(const MyString &s);
+private:
+	int m_len;
+	char *m_p;
+};
+```
+
 
 
 
